@@ -1,86 +1,66 @@
+import { error } from 'console';
 import { useEffect, useState } from 'react';
 
-export function useJsonFetch(url, opts) {
-  fetch('https://example.com/', { method: 'CONNECT' });
 
+export function useJsonFetch(url: string, opts: string) {
+  const [newData, setNewData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [newError, setNewError] = useState('');
+  
   useEffect(() => {
   
     async function startFetching() {
-      // let promise = new Promise(function(resolve, reject) {
-      //   setLoading(true);
-      //   let controller = new AbortController();
-      //   let response = fetch(url, {
-      //     signal: controller.signal
-      //   });
-      //   resolve(response => {
-
-      //   });
-      // });
-      // // выполнится, когда промис завершится, независимо от того, успешно или нет
-      // promise.finally(() => setLoading(false));
-
-      // // resolve запустит первую функцию, переданную в .then
-      // promise.then(
-      //   result => result.json(), // читаем ответ в формате JSON
-      //   error => alert(error) // не будет запущена
-      // );
-
-
-      const badUrl = "https://jsonplaceholder.typicode.com/posts1321654646186/";
       let controller = new AbortController();
+      let result;
 
-      // let response = 
-      await fetch(badUrl, {
-        method: 'GET',
+      await fetch(url, {
+        method: opts,
         signal: controller.signal,
       })
         .then(response => {
           const contentType = response.headers.get('content-type');
           if(!response.ok){
-              throw new Error("I'm an error 200-299");
+            try {
+              throw Error("I'm an error 200-299");
+            } catch (e) {
+              result = (e as Error).message;
+              setNewError(result)
+            }
           } else{
             if (!contentType || !contentType.includes('application/json')) {
-              throw new TypeError("Ой, мы не получили JSON!");
-              } else {
-                return response.json()
+              try {
+                throw TypeError("Ой, мы не получили JSON!");
+              } catch (e) {
+                result = (e as Error).message;
+                setNewError(result)
               }
-          }
+            } else {
+              return response.json()
+          }}
         })
-        .then(data => console.log('Response Data', data))
-        .then(() => setLoading(false))
-        .catch(error => {console.log('ERROR', error)})
+        .then(data => {
+          console.log('Response Data', data);
+          setNewData(data);
+        })
+        .then(() => {
+          setLoading(false);
+          controller.abort(); // прервать выполнение fetch
+        })
+        .catch(error => {
+          console.log('ERROR', error);
+          result = (error as Error).message;
+          setNewError(result);
+        });
 
-
-  //     let controller = new AbortController();
-  //     let response = await fetch(url, {
-  //       signal: controller.signal
-  //     });
-  //   if (response.ok) { // если HTTP-статус в диапазоне 200-299
-  //     // получаем тело ответа (см. про этот метод ниже)
-  //     let json = await response.json(); // читаем ответ в формате JSON
-  //   } else {
-  //     let error = response.status;
-  //     alert("Ошибка HTTP: " + error);
-  //   }
-  // };
-
-  } 
+      const inputProps = {newData, loading, newError};
+      return inputProps
+    };
 
   startFetching();
   
   }, []);
 
   return {
-    data() {
-      console.log('✅ Data loaded.');
-    },
-    loading() {
-      console.log('✅ Loading...');
-    },
-    error() {
-      console.log('❌ Error.');
-    }
+
   };
 }
