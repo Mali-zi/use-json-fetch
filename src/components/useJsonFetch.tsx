@@ -1,19 +1,18 @@
-import { error } from 'console';
+// import { error } from 'console';
 import { useEffect, useState } from 'react';
 
-
 export function useJsonFetch(url: string, opts: string) {
-  const [newData, setNewData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [newData, setNewData] = useState('');
+  const [newLoading, setNewLoading] = useState(false);
   const [newError, setNewError] = useState('');
   
   useEffect(() => {
   
-    async function startFetching() {
+    // async function startFetching() {
       let controller = new AbortController();
       let result;
 
-      await fetch(url, {
+      fetch(url, {
         method: opts,
         signal: controller.signal,
       })
@@ -21,7 +20,7 @@ export function useJsonFetch(url: string, opts: string) {
           const contentType = response.headers.get('content-type');
           if(!response.ok){
             try {
-              throw Error("I'm an error 200-299");
+              throw new Error("I'm an error 200-299");
             } catch (e) {
               result = (e as Error).message;
               setNewError(result)
@@ -29,7 +28,7 @@ export function useJsonFetch(url: string, opts: string) {
           } else{
             if (!contentType || !contentType.includes('application/json')) {
               try {
-                throw TypeError("Ой, мы не получили JSON!");
+                throw new TypeError("Ой, мы не получили JSON!");
               } catch (e) {
                 result = (e as Error).message;
                 setNewError(result)
@@ -43,7 +42,7 @@ export function useJsonFetch(url: string, opts: string) {
           setNewData(data);
         })
         .then(() => {
-          setLoading(false);
+          setNewLoading(false);
           controller.abort(); // прервать выполнение fetch
         })
         .catch(error => {
@@ -52,15 +51,15 @@ export function useJsonFetch(url: string, opts: string) {
           setNewError(result);
         });
 
-      const inputProps = {newData, loading, newError};
-      return inputProps
-    };
+      // const inputProps = {newData, loading, newError};
+      // return inputProps;
+  //   };
 
-  startFetching();
+  // startFetching();
   
-  }, []);
+  });
 
-  return {
+  const inputProps = [newData, newLoading, newError];
 
-  };
+  return inputProps;
 }

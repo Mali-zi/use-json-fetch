@@ -20,9 +20,7 @@ export interface ListProps {
 }
 
 export interface DetailsProps {
-  id: number,
-}
-
-export interface Options {
-  
+  data: string, 
+  loading: boolean, 
+  error: string
 }
