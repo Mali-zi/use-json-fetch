@@ -1,17 +1,26 @@
 // import React, { useState } from 'react';
 import './App.css';
-import { useJsonFetch } from './components/useJsonFetch';
+import RecpComp from './components/RespComp';
 
 function App() {
-
-  const [data, loading, error] = useJsonFetch('http://localhost:7070/data', 'GET');
 
   return (
     <div className="App">
       <h1>Кастомный хук useJsonFetch</h1>
-      <div>{data}</div>
-      <div>{loading}</div>
-      <div>{error}</div>
+      <div>
+        <RecpComp
+          url={'http://localhost:7070/data'}
+          metod={'GET'}
+        />
+        <RecpComp
+          url={'http://localhost:7070/loading'}
+          metod={'GET'}
+        />
+        <RecpComp
+          url={'http://localhost:7070/error'}
+          metod={'GET'}
+        />
+      </div>
     </div>
   );
 }
