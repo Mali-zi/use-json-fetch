@@ -18,3 +18,5 @@ GET http://localhost:7070/error — получение 500 ошибки;
 GET http://localhost:7070/loading — индикатор загрузки.
 
 Backend размещен в каталоге backend.
+
+<img width="900" alt="use-effect-screenshot" src="https://github.com/Mali-zi/use-json-fetch/blob/master/img/screenshot.PNG">
