@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 export function useJsonFetch(url: string, opts: string) {
-  const [data, setData] = useState('init');
+  const [data, setData] = useState();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -18,23 +18,10 @@ export function useJsonFetch(url: string, opts: string) {
         const contentType = response.headers.get('content-type');
 
         if(!response.ok){
-          try {
             throw new Error(`HTTP error, status = ${response.status}`); // Ошибка сети
-          } catch (e) {
-            result = (e as Error).message;
-            setError(result)
-          }
-
         } else {
-
           if (!contentType || !contentType.includes('application/json')) {
-            try {
               throw new TypeError(`TypeError, status = ${response.status}`); // Получен не JSON
-            } catch (e) {
-              result = (e as Error).message;
-              setError(result)
-            }
-
           } else {
             return response.json()
           }
@@ -51,7 +38,7 @@ export function useJsonFetch(url: string, opts: string) {
       });
     }, []);
   
-  const inputProps = {data, loading, error};
+  const inputProps = [data, loading, error];
 
   return inputProps;
 }

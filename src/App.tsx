@@ -10,15 +10,15 @@ function App() {
       <div>
         <RecpComp
           url={'http://localhost:7070/data'}
-          metod={'GET'}
+          opts={'GET'}
         />
         <RecpComp
           url={'http://localhost:7070/loading'}
-          metod={'GET'}
+          opts={'GET'}
         />
         <RecpComp
           url={'http://localhost:7070/error'}
-          metod={'GET'}
+          opts={'GET'}
         />
       </div>
     </div>
